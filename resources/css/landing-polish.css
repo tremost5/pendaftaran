@@ -1,3 +1,8 @@
+.poster-frame,
+.landing-poster-frame {
+    overflow: visible !important;
+}
+
 .poster-frame::before {
     content: "";
     position: absolute;
@@ -6,12 +11,14 @@
     pointer-events: none;
 }
 
-.poster-frame img {
+.poster-frame img,
+.landing-poster-frame img {
     display: block;
     width: 100%;
     max-width: 100%;
-    height: auto;
-    object-fit: cover;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
     object-position: center;
     animation: posterFade 250ms ease-out;
 }
@@ -107,11 +114,20 @@
         padding-bottom: 0.9rem;
     }
 
-    .landing-poster-frame img {
-        height: auto;
-        max-height: 62vh;
+    .landing-poster-frame,
+    .poster-frame {
+        overflow: visible !important;
+    }
+
+    .landing-poster-frame img,
+    .poster-frame img {
+        display: block;
         width: 100%;
-        object-fit: cover;
+        max-width: 100%;
+        height: auto !important;
+        max-height: none !important;
+        object-fit: contain !important;
+        object-position: center;
     }
 
     .landing-countdown {
