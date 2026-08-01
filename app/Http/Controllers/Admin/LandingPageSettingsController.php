@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\SettingsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -19,6 +20,15 @@ class LandingPageSettingsController extends Controller
     public function index(): View
     {
         $heroImagePath = $this->settingsService->string('hero_image');
+        $heroImageUrl = asset('logo.jpeg');
+
+        if ($heroImagePath !== '') {
+            if (file_exists(public_path($heroImagePath))) {
+                $heroImageUrl = asset($heroImagePath);
+            } elseif (Storage::disk('public')->exists($heroImagePath)) {
+                $heroImageUrl = Storage::disk('public')->url($heroImagePath);
+            }
+        }
 
         return view('admin.landing-settings', [
             'settings' => [
@@ -26,9 +36,7 @@ class LandingPageSettingsController extends Controller
                 'hero_subtitle' => $this->settingsService->string('hero_subtitle', 'Talent Regeneration • DSCM'),
                 'hero_button' => $this->settingsService->string('hero_button', '✨ Daftarkan Diri Kamu Yuk'),
                 'hero_image' => $heroImagePath,
-                'hero_image_url' => $heroImagePath !== '' && Storage::disk('public')->exists($heroImagePath)
-                    ? Storage::disk('public')->url($heroImagePath)
-                    : asset('logo.jpeg'),
+                'hero_image_url' => $heroImageUrl,
                 'footer_copyright' => $this->settingsService->string('footer_copyright', '© ' . date('Y') . ' Pendataan Anak TR'),
                 'footer_powered' => $this->settingsService->string('footer_powered', 'Powered by DSCMKIDS Online'),
                 'footer_developer' => $this->settingsService->string('footer_developer', 'Developed by Kharis Immanuel Sejahtera'),
@@ -55,13 +63,21 @@ class LandingPageSettingsController extends Controller
         $heroImagePath = $this->settingsService->string('hero_image');
 
         if ($request->hasFile('hero_image')) {
-            if ($heroImagePath !== '' && Storage::disk('public')->exists($heroImagePath)) {
-                Storage::disk('public')->delete($heroImagePath);
+            $targetDirectory = public_path('uploads/landing');
+            File::ensureDirectoryExists($targetDirectory);
+
+            if ($heroImagePath !== '' && $heroImagePath !== 'logo.jpeg') {
+                if (file_exists(public_path($heroImagePath))) {
+                    File::delete(public_path($heroImagePath));
+                } elseif (Storage::disk('public')->exists($heroImagePath)) {
+                    Storage::disk('public')->delete($heroImagePath);
+                }
             }
 
             $extension = strtolower($request->file('hero_image')->getClientOriginalExtension() ?: 'jpg');
-            $storedPath = $request->file('hero_image')->storeAs('landing', 'hero-image-' . time() . '.' . $extension, 'public');
-            $heroImagePath = $storedPath;
+            $fileName = 'hero-image-' . time() . '.' . $extension;
+            $request->file('hero_image')->move($targetDirectory, $fileName);
+            $heroImagePath = 'uploads/landing/' . $fileName;
         }
 
         $this->settingsService->putMany([
