@@ -1,0 +1,16 @@
+{
+  "name": "Pendataan Anak TR",
+  "short_name": "Data TR",
+  "description": "Pendataan Anak Talent Regeneration DSCM.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1220",
+  "theme_color": "#0B1220",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

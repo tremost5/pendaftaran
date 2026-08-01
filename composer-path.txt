@@ -1,0 +1,2 @@
+C:\ProgramData\ComposerSetup\bin\composer
+C:\ProgramData\ComposerSetup\bin\composer.bat
