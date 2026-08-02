@@ -1,0 +1,9 @@
+{
+    "queue_default": "database",
+    "connection_class": "Illuminate\\Queue\\DatabaseQueue",
+    "driver_name": null,
+    "jobs_before": 0,
+    "jobs_after": 0,
+    "pushed": false,
+    "error": "Failed to serialize job of type [Illuminate\\Contracts\\Queue\\ShouldQueue@anonymous\u0000C:\\xampp\\htdocs\\datatr\\tmp_queue_push_direct.php:17$0]: Serialization of 'Illuminate\\Contracts\\Queue\\ShouldQueue@anonymous' is not allowed"
+}

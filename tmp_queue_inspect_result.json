@@ -1,0 +1,14 @@
+{
+    "queue_default": "database",
+    "database_driver": "database",
+    "database_connection": null,
+    "database_table": "jobs",
+    "database_queue": "default",
+    "queue_after_commit": false,
+    "db_connection": "mysql",
+    "db_database": "dscx7887_nobar",
+    "env_queue_connection": "database",
+    "env_db_queue_connection": false,
+    "env_db_queue_table": false,
+    "env_db_connection": "mysql"
+}

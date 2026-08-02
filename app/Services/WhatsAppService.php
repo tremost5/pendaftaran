@@ -165,14 +165,47 @@ class WhatsAppService
 
     private function dispatchWhatsAppMessage(?WhatsAppLog $log, string $target, ?int $registrationId = null, ?string $message = null): bool
     {
+        Log::info('Entering dispatchWhatsAppMessage', [
+            'registration_id' => $registrationId,
+            'log_id' => $log?->id,
+            'target' => $target,
+        ]);
+
         $message = $message ?? ($log?->message ?? '');
         $delay = $this->settingsService->integer('whatsapp_delay', 5);
+        $queueDefault = Config::get('queue.default');
 
-        if (Config::get('queue.default') !== 'sync') {
+        Log::info('dispatchWhatsAppMessage pre-dispatch check', [
+            'queue_default' => $queueDefault,
+            'whatsapp_log_id' => $log?->id,
+            'target' => $target,
+            'delay_seconds' => $delay,
+        ]);
+
+        if ($queueDefault !== 'sync') {
+            Log::info('About to dispatch SendWhatsAppMessage job', [
+                'whatsapp_log_id' => $log?->id,
+                'target' => $target,
+                'message_length' => strlen($message),
+                'delay_seconds' => $delay,
+            ]);
+
             SendWhatsAppMessage::dispatch($log?->id, $target, $message, $registrationId)->delay(now()->addSeconds($delay));
+
+            Log::info('SendWhatsAppMessage dispatch completed', [
+                'whatsapp_log_id' => $log?->id,
+                'target' => $target,
+                'delay_seconds' => $delay,
+            ]);
 
             return true;
         }
+
+        Log::info('dispatchWhatsAppMessage returning before dispatch because queue driver is sync', [
+            'queue_default' => $queueDefault,
+            'whatsapp_log_id' => $log?->id,
+            'target' => $target,
+        ]);
 
         if ($log) {
             return $this->performSendLog($log);
@@ -292,8 +325,22 @@ class WhatsAppService
         $provider = $this->getProvider();
         $token = $this->getToken();
         $timeout = $this->settingsService->integer('whatsapp_timeout', 10);
+        $maskedToken = substr($token, 0, 5) . (strlen($token) > 5 ? '...' : '');
+
+        Log::info('WhatsApp provider request start', [
+            'provider' => $provider,
+            'target' => $target,
+            'message_length' => strlen($message),
+            'token_masked' => $maskedToken,
+            'timeout' => $timeout,
+        ]);
 
         if ($token === '') {
+            Log::warning('WhatsApp provider request skipped because token is not configured.', [
+                'provider' => $provider,
+                'target' => $target,
+            ]);
+
             return [
                 'success' => false,
                 'error' => 'WhatsApp API token is not configured.',
@@ -302,6 +349,11 @@ class WhatsAppService
         }
 
         if ($provider !== 'fonnte') {
+            Log::warning('WhatsApp provider request skipped because provider is unsupported.', [
+                'provider' => $provider,
+                'target' => $target,
+            ]);
+
             return [
                 'success' => false,
                 'error' => 'Unsupported WhatsApp provider: '.$provider,
@@ -321,9 +373,26 @@ class WhatsAppService
                 ]);
 
             $responseBody = $response->body();
+            $responseStatus = $response->status();
             $decodedBody = json_decode($responseBody, true);
 
+            Log::info('WhatsApp provider response received', [
+                'provider' => $provider,
+                'target' => $target,
+                'token_masked' => $maskedToken,
+                'status_code' => $responseStatus,
+                'response_body' => $responseBody,
+                'decoded_response' => $decodedBody,
+            ]);
+
             if (is_array($decodedBody) && array_key_exists('status', $decodedBody) && $decodedBody['status'] === false) {
+                Log::warning('WhatsApp provider rejected the request', [
+                    'provider' => $provider,
+                    'target' => $target,
+                    'status_code' => $responseStatus,
+                    'response_body' => $responseBody,
+                ]);
+
                 return [
                     'success' => false,
                     'error' => $decodedBody['reason'] ?? 'Provider rejected the request.',
@@ -332,18 +401,39 @@ class WhatsAppService
             }
 
             if ($response->successful()) {
+                Log::info('WhatsApp provider request successful', [
+                    'provider' => $provider,
+                    'target' => $target,
+                    'status_code' => $responseStatus,
+                ]);
+
                 return [
                     'success' => true,
                     'response' => $responseBody,
                 ];
             }
 
+            Log::warning('WhatsApp provider returned unexpected HTTP status', [
+                'provider' => $provider,
+                'target' => $target,
+                'status_code' => $responseStatus,
+                'response_body' => $responseBody,
+            ]);
+
             return [
                 'success' => false,
-                'error' => 'Unexpected response: '.$response->status(),
+                'error' => 'Unexpected response: '.$responseStatus,
                 'response' => $responseBody,
             ];
         } catch (\Throwable $throwable) {
+            Log::error('WhatsApp provider request failed with exception', [
+                'provider' => $provider,
+                'target' => $target,
+                'token_masked' => $maskedToken,
+                'exception_message' => $throwable->getMessage(),
+                'exception_trace' => $throwable->getTraceAsString(),
+            ]);
+
             return [
                 'success' => false,
                 'error' => $throwable->getMessage(),

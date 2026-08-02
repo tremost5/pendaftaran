@@ -1,0 +1,9 @@
+{
+    "queue_default": "database",
+    "connection_class": "Illuminate\\Queue\\DatabaseQueue",
+    "jobs_before": 0,
+    "jobs_after": 0,
+    "dispatchResult": true,
+    "dispatchError": null,
+    "dispatchTrace": null
+}

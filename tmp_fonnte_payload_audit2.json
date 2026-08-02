@@ -1,0 +1,68 @@
+{
+    "endpoint": "https://api.fonnte.com/send",
+    "method": "POST",
+    "delay": "5",
+    "authorization": "aF88T...",
+    "records": [
+        {
+            "id": 20,
+            "registration_id": null,
+            "target": "6281234567892",
+            "country_code": "628",
+            "message": "Shalom Trace Panitia,\nAkun Pengurus Anda telah dibuat.\nUsername:\ntrace_panitia_mUqHD\nPassword:\nTracePass123\nSilakan login melalui:\nhttp://127.0.0.1:8000/login\nDemi keamanan, segera ubah password setelah login pertama.\nTuhan Yesus Memberkati.",
+            "status": "sent",
+            "attempt_count": 1,
+            "response": "{\"detail\":\"success! message in queue\",\"id\":[170902081],\"process\":\"pending\",\"quota\":{\"6282330736425\":{\"details\":\"deduced from total quota\",\"quota\":982,\"remaining\":981,\"used\":1}},\"requestid\":625439739,\"status\":true,\"target\":[\"6281234567892\"]}",
+            "created_at": "2026-08-02 07:32:16",
+            "updated_at": "2026-08-02 07:32:24"
+        },
+        {
+            "id": 19,
+            "registration_id": 10,
+            "target": "6281234567891",
+            "country_code": "628",
+            "message": "\ud83c\udf89 Pendaftaran Pendataan Tunas Remaja Berhasil\nShalom, Trace User 1.\nTerima kasih sudah mengisi Pendataan Tunas Remaja DSCM.\nBerikut data yang kami terima:\n\ud83d\udc64 Nama Lengkap : Trace User 1\n\ud83d\udcdb Nama Panggilan : Trace1\n\ud83c\udf82 Tanggal Lahir : 2010-08-02\n\ud83c\udfe0 Alamat : Jl Trace 1\n\ud83c\udfeb Asal Sekolah : SMA Trace\n\ud83d\udcf1 Nomor WhatsApp : 6281234567891\n\ud83d\udebb Gender : Laki-laki\n\ud83c\udfbc Minat Pelayanan:\n\u2022 Worship Leader\nData Anda telah berhasil kami simpan.\nApabila diperlukan informasi lebih lanjut, Pengurus Tunas Remaja akan menghubungi Anda melalui nomor WhatsApp ini.\nTuhan Yesus Memberkati.",
+            "status": "sent",
+            "attempt_count": 1,
+            "response": "{\"detail\":\"success! message in queue\",\"id\":[170902070],\"process\":\"pending\",\"quota\":{\"6282330736425\":{\"details\":\"deduced from total quota\",\"quota\":983,\"remaining\":982,\"used\":1}},\"requestid\":625439703,\"status\":true,\"target\":[\"6281234567891\"]}",
+            "created_at": "2026-08-02 07:32:15",
+            "updated_at": "2026-08-02 07:32:20"
+        },
+        {
+            "id": 18,
+            "registration_id": null,
+            "target": "6281234567892",
+            "country_code": "628",
+            "message": "Shalom Trace Panitia,\nAkun Pengurus Anda telah dibuat.\nUsername:\ntrace_panitia_mpSYw\nPassword:\nTracePass123\nSilakan login melalui:\nhttp://localhost:8000/admin/login\nDemi keamanan, segera ubah password setelah login pertama.\nTuhan Yesus Memberkati.",
+            "status": "sent",
+            "attempt_count": 1,
+            "response": "{\"detail\":\"success! message in queue\",\"id\":[170902056],\"process\":\"pending\",\"quota\":{\"6282330736425\":{\"details\":\"deduced from total quota\",\"quota\":984,\"remaining\":983,\"used\":1}},\"requestid\":625439546,\"status\":true,\"target\":[\"6281234567892\"]}",
+            "created_at": "2026-08-02 07:31:54",
+            "updated_at": "2026-08-02 07:32:01"
+        },
+        {
+            "id": 17,
+            "registration_id": 9,
+            "target": "6281234567891",
+            "country_code": "628",
+            "message": "\ud83c\udf89 Pendaftaran Pendataan Tunas Remaja Berhasil\nShalom, Trace User 1.\nTerima kasih sudah mengisi Pendataan Tunas Remaja DSCM.\nBerikut data yang kami terima:\n\ud83d\udc64 Nama Lengkap : Trace User 1\n\ud83d\udcdb Nama Panggilan : Trace1\n\ud83c\udf82 Tanggal Lahir : 2010-08-02\n\ud83c\udfe0 Alamat : Jl Trace 1\n\ud83c\udfeb Asal Sekolah : SMA Trace\n\ud83d\udcf1 Nomor WhatsApp : 6281234567891\n\ud83d\udebb Gender : Laki-laki\n\ud83c\udfbc Minat Pelayanan:\n\u2022 Worship Leader\nData Anda telah berhasil kami simpan.\nApabila diperlukan informasi lebih lanjut, Pengurus Tunas Remaja akan menghubungi Anda melalui nomor WhatsApp ini.\nTuhan Yesus Memberkati.",
+            "status": "sent",
+            "attempt_count": 1,
+            "response": "{\"detail\":\"success! message in queue\",\"id\":[170902053],\"process\":\"pending\",\"quota\":{\"6282330736425\":{\"details\":\"deduced from total quota\",\"quota\":985,\"remaining\":984,\"used\":1}},\"requestid\":625439540,\"status\":true,\"target\":[\"6281234567891\"]}",
+            "created_at": "2026-08-02 07:31:53",
+            "updated_at": "2026-08-02 07:32:01"
+        },
+        {
+            "id": 16,
+            "registration_id": 8,
+            "target": "6281232944843",
+            "country_code": "628",
+            "message": "\ud83c\udf89 Pendaftaran Pendataan Tunas Remaja Berhasil\nShalom, brokoli.\nTerima kasih sudah mengisi Pendataan Tunas Remaja DSCM.\nBerikut data yang kami terima:\n\ud83d\udc64 Nama Lengkap : brokoli\n\ud83d\udcdb Nama Panggilan : Owin\n\ud83c\udf82 Tanggal Lahir : 2010-10-01\n\ud83c\udfe0 Alamat : malang\n\ud83c\udfeb Asal Sekolah : korea\n\ud83d\udcf1 Nomor WhatsApp : 6281232944843\n\ud83d\udebb Gender : Perempuan\n\ud83c\udfbc Minat Pelayanan:\n\u2022 Musik - Bass\nData Anda telah berhasil kami simpan.\nApabila diperlukan informasi lebih lanjut, Pengurus Tunas Remaja akan menghubungi Anda melalui nomor WhatsApp ini.\nTuhan Yesus Memberkati.",
+            "status": "sent",
+            "attempt_count": 1,
+            "response": "{\"detail\":\"success! message in queue\",\"id\":[170901008],\"process\":\"pending\",\"quota\":{\"6282330736425\":{\"details\":\"deduced from total quota\",\"quota\":986,\"remaining\":985,\"used\":1}},\"requestid\":625430465,\"status\":true,\"target\":[\"6281232944843\"]}",
+            "created_at": "2026-08-02 07:20:08",
+            "updated_at": "2026-08-02 07:20:14"
+        }
+    ]
+}
