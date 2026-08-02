@@ -81,16 +81,6 @@ class DatabaseSeeder extends Seeder
         );
 
         Setting::query()->updateOrCreate(
-            ['key' => 'whatsapp_delay'],
-            ['value' => '5'],
-        );
-
-        Setting::query()->updateOrCreate(
-            ['key' => 'whatsapp_retry_count'],
-            ['value' => '1'],
-        );
-
-        Setting::query()->updateOrCreate(
             ['key' => 'whatsapp_timeout'],
             ['value' => '10'],
         );

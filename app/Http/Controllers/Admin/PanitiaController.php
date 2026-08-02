@@ -73,7 +73,7 @@ class PanitiaController
             ],
         ]);
 
-        return redirect()->route('admin.panitia.index')->with('success', 'Pengurus berhasil ditambahkan. Kredensial otomatis telah dibuat dan dikirim melalui WhatsApp queue.');
+        return redirect()->route('admin.panitia.index')->with('success', 'Pengurus berhasil ditambahkan. Kredensial otomatis telah dibuat dan dikirim melalui WhatsApp.');
     }
 
     public function activate(User $panitia): RedirectResponse

@@ -1,0 +1,12 @@
+app\Http\Controllers\Admin\WhatsAppSettingController.php:31:                'whatsapp_delay' => $this->settingsService->integer('whatsapp_delay', 5),
+app\Http\Controllers\Admin\WhatsAppSettingController.php:32:                'whatsapp_retry_count' => $this->settingsService->integer('whatsapp_retry_count', 1),
+app\Http\Controllers\Admin\WhatsAppSettingController.php:56:            'whatsapp_delay' => ['required', 'integer', 'in:5,10,15,20,30,60,120'],
+app\Http\Controllers\Admin\WhatsAppSettingController.php:57:            'whatsapp_retry_count' => ['required', 'integer', 'min:1', 'max:5'],
+app\Http\Controllers\Admin\WhatsAppSettingController.php:70:            'whatsapp_delay' => (int) ($validated['whatsapp_delay'] ?? 5),
+app\Http\Controllers\Admin\WhatsAppSettingController.php:71:            'whatsapp_retry_count' => (int) ($validated['whatsapp_retry_count'] ?? 1),
+app\Jobs\SendWhatsAppMessage.php:16:class SendWhatsAppMessage implements ShouldQueue
+app\Jobs\SendWhatsAppMessage.php:30:        Log::info('SendWhatsAppMessage handle start', [
+app\Jobs\SendWhatsAppMessage.php:44:                    Log::info('SendWhatsAppMessage handle completed for existing WhatsAppLog', [
+app\Jobs\SendWhatsAppMessage.php:60:                    Log::info('SendWhatsAppMessage handle completed for direct send with registration', [
+app\Jobs\SendWhatsAppMessage.php:71:            Log::info('SendWhatsAppMessage handle completed for direct send without registration', [
+app\Jobs\SendWhatsAppMessage.php:75:            Log::error('SendWhatsAppMessage handle exception', [

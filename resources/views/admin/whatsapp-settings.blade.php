@@ -82,26 +82,6 @@
                         <option value="0" @selected(old('whatsapp_enabled', (string) (int) $settings['whatsapp_enabled']) === '0')>Disable</option>
                     </x-ui.select>
 
-                    <x-ui.select
-                        label="WhatsApp Delay (Detik)"
-                        name="whatsapp_delay"
-                        :error="$errors->first('whatsapp_delay')"
-                    >
-                        @foreach([5,10,15,20,30,60,120] as $opt)
-                            <option value="{{ $opt }}" @selected((int) old('whatsapp_delay', $settings['whatsapp_delay']) === $opt)>{{ $opt }} detik</option>
-                        @endforeach
-                    </x-ui.select>
-
-                    <x-ui.input
-                        label="Retry Count"
-                        name="whatsapp_retry_count"
-                        type="number"
-                        min="1"
-                        max="5"
-                        value="{{ old('whatsapp_retry_count', $settings['whatsapp_retry_count']) }}"
-                        :error="$errors->first('whatsapp_retry_count')"
-                    />
-
                     <x-ui.input
                         label="Request Timeout (Detik)"
                         name="whatsapp_timeout"

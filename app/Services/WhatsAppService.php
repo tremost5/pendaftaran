@@ -2,12 +2,10 @@
 
 namespace App\Services;
 
-use App\Jobs\SendWhatsAppMessage;
 use App\Models\Registration;
 use App\Models\User;
 use App\Models\WhatsAppLog;
 use App\Support\WhatsappNumber;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -86,7 +84,7 @@ class WhatsAppService
 
         $log = $this->createWhatsAppLog(null, $target, $message);
 
-        return $this->dispatchWhatsAppMessage($log, $target);
+        return $this->sendOrLog($log, $target);
     }
 
     public function resendRegistrationWhatsApp(Registration $registration, string $eventTitle, ?string $eventLocation = null, ?string $messageOverride = null): bool
@@ -130,7 +128,7 @@ class WhatsAppService
 
         $log = $this->createWhatsAppLog(null, $target, $message);
 
-        return $this->dispatchWhatsAppMessage($log, $target);
+        return $this->sendOrLog($log, $target);
     }
 
     private function sendMessage(Registration $registration, string $message): bool
@@ -160,58 +158,16 @@ class WhatsAppService
         $log = $this->createWhatsAppLog($registration->id, $target, $message);
         $this->updateRegistrationDeliveryStatus($registration, 'pending');
 
-        return $this->dispatchWhatsAppMessage($log, $target, $registration->id, $message);
+        return $this->sendOrLog($log, $target, $registration->id, $message);
     }
 
-    private function dispatchWhatsAppMessage(?WhatsAppLog $log, string $target, ?int $registrationId = null, ?string $message = null): bool
+    private function sendOrLog(?WhatsAppLog $log, string $target, ?int $registrationId = null, ?string $message = null): bool
     {
-        Log::info('Entering dispatchWhatsAppMessage', [
-            'registration_id' => $registrationId,
-            'log_id' => $log?->id,
-            'target' => $target,
-        ]);
-
-        $message = $message ?? ($log?->message ?? '');
-        $delay = $this->settingsService->integer('whatsapp_delay', 5);
-        $queueDefault = Config::get('queue.default');
-
-        Log::info('dispatchWhatsAppMessage pre-dispatch check', [
-            'queue_default' => $queueDefault,
-            'whatsapp_log_id' => $log?->id,
-            'target' => $target,
-            'delay_seconds' => $delay,
-        ]);
-
-        if ($queueDefault !== 'sync') {
-            Log::info('About to dispatch SendWhatsAppMessage job', [
-                'whatsapp_log_id' => $log?->id,
-                'target' => $target,
-                'message_length' => strlen($message),
-                'delay_seconds' => $delay,
-            ]);
-
-            SendWhatsAppMessage::dispatch($log?->id, $target, $message, $registrationId)->delay(now()->addSeconds($delay));
-
-            Log::info('SendWhatsAppMessage dispatch completed', [
-                'whatsapp_log_id' => $log?->id,
-                'target' => $target,
-                'delay_seconds' => $delay,
-            ]);
-
-            return true;
-        }
-
-        Log::info('dispatchWhatsAppMessage returning before dispatch because queue driver is sync', [
-            'queue_default' => $queueDefault,
-            'whatsapp_log_id' => $log?->id,
-            'target' => $target,
-        ]);
-
-        if ($log) {
+        if ($log !== null) {
             return $this->performSendLog($log);
         }
 
-        return $this->performDirectSend($target, $message, $registrationId);
+        return $this->performDirectSend($target, $message ?? '', $registrationId);
     }
 
     public function performSendLog(WhatsAppLog $log): bool
@@ -220,6 +176,7 @@ class WhatsAppService
         $log->status = 'pending';
         $log->save();
 
+        sleep(5);
         $result = $this->sendViaProvider($log->target, $log->message);
         $log->response = $result['response'] ?? null;
 
@@ -238,21 +195,8 @@ class WhatsAppService
             return true;
         }
 
-        $log->error = $result['error'] ?? 'WhatsApp request failed.';
-
-        if ($log->attempt_count < $log->max_attempts) {
-            $log->status = 'pending';
-            $log->save();
-
-            if (Config::get('queue.default') !== 'sync') {
-                SendWhatsAppMessage::dispatch($log->id, $log->target, $log->message, $log->registration_id)
-                    ->delay(now()->addSeconds($this->settingsService->integer('whatsapp_delay', 5)));
-            }
-
-            return false;
-        }
-
         $log->status = 'failed';
+        $log->error = $result['error'] ?? 'WhatsApp request failed.';
         $log->save();
 
         if ($log->registration_id !== null) {
@@ -297,6 +241,7 @@ class WhatsAppService
             return false;
         }
 
+        sleep(5);
         $result = $this->sendViaProvider($target, $message);
 
         if ($result['success']) {
@@ -456,7 +401,7 @@ class WhatsAppService
             'message' => $message,
             'status' => 'pending',
             'attempt_count' => 0,
-            'max_attempts' => $this->settingsService->integer('whatsapp_retry_count', 1),
+            'max_attempts' => 1,
         ]);
     }
 

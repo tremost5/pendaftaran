@@ -28,8 +28,6 @@ class WhatsAppSettingController extends Controller
                 'whatsapp_api_token' => $this->settingsService->string('whatsapp_api_token', $this->settingsService->string('fonnte_token')),
                 'fonnte_token' => $this->settingsService->string('fonnte_token'),
                 'whatsapp_enabled' => $this->settingsService->boolean('whatsapp_enabled', true),
-                'whatsapp_delay' => $this->settingsService->integer('whatsapp_delay', 5),
-                'whatsapp_retry_count' => $this->settingsService->integer('whatsapp_retry_count', 1),
                 'whatsapp_timeout' => $this->settingsService->integer('whatsapp_timeout', 10),
                 'whatsapp_provider' => $this->settingsService->string('whatsapp_provider', 'fonnte'),
                 'whatsapp_logging_enabled' => $this->settingsService->boolean('whatsapp_logging_enabled', true),
@@ -53,8 +51,6 @@ class WhatsAppSettingController extends Controller
             'whatsapp_api_token' => ['required', 'string', 'max:255'],
             'whatsapp_provider' => ['required', 'string', 'in:fonnte'],
             'whatsapp_enabled' => ['required', 'boolean'],
-            'whatsapp_delay' => ['required', 'integer', 'in:5,10,15,20,30,60,120'],
-            'whatsapp_retry_count' => ['required', 'integer', 'min:1', 'max:5'],
             'whatsapp_timeout' => ['required', 'integer', 'min:5', 'max:30'],
             'whatsapp_logging_enabled' => ['required', 'boolean'],
         ]);
@@ -67,8 +63,6 @@ class WhatsAppSettingController extends Controller
             'fonnte_token' => $validated['whatsapp_api_token'],
             'whatsapp_provider' => $validated['whatsapp_provider'],
             'whatsapp_enabled' => (bool) $validated['whatsapp_enabled'],
-            'whatsapp_delay' => (int) ($validated['whatsapp_delay'] ?? 5),
-            'whatsapp_retry_count' => (int) ($validated['whatsapp_retry_count'] ?? 1),
             'whatsapp_timeout' => (int) ($validated['whatsapp_timeout'] ?? 10),
             'whatsapp_logging_enabled' => (bool) $validated['whatsapp_logging_enabled'],
         ]);
