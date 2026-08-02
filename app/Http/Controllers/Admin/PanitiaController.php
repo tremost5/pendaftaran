@@ -32,22 +32,18 @@ class PanitiaController
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'password' => 'nullable|string|min:6',
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:20'],
+            'status' => ['sometimes', 'in:aktif,nonaktif'],
         ]);
-        // New pengurus start as 'belum_aktif' and will be activated by admin
+
         $normalizedPhone = WhatsappNumber::normalize($validated['phone']);
         $username = $this->generateUsernameFromPhone($normalizedPhone);
-
-        // ensure username is unique
         $username = $this->ensureUniqueUsername($username);
-
         $email = $this->generateUniqueEmail($username);
 
-        // Use provided password if given, else generate placeholder (activation will generate credentials if needed)
-        $providedPassword = $request->input('password');
-        $passwordToStore = $providedPassword ? Hash::make($providedPassword) : Hash::make($this->generateTemporaryPassword());
+        $generatedPassword = $this->generateTemporaryPassword();
+        $passwordToStore = Hash::make($generatedPassword);
 
         $panitia = User::create([
             'name' => $validated['name'],
@@ -56,9 +52,12 @@ class PanitiaController
             'phone' => $normalizedPhone,
             'password' => $passwordToStore,
             'role' => 'panitia',
-            'status' => 'belum_aktif',
+            'status' => $validated['status'] ?? 'aktif',
             'force_password_change' => true,
         ]);
+
+        $loginUrl = route('login', absolute: true);
+        $this->whatsAppService->sendPanitiaCredentials($panitia, $generatedPassword, $loginUrl);
 
         \App\Models\ActivityLog::create([
             'user_id' => auth()->id(),
@@ -68,10 +67,13 @@ class PanitiaController
             'target_id' => $panitia->id,
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
-            'meta' => ['phone' => $panitia->phone],
+            'meta' => [
+                'phone' => $panitia->phone,
+                'status' => $panitia->status,
+            ],
         ]);
 
-        return redirect()->route('admin.panitia.index')->with('success', 'Pengurus berhasil ditambahkan dan menunggu aktivasi.');
+        return redirect()->route('admin.panitia.index')->with('success', 'Pengurus berhasil ditambahkan. Kredensial otomatis telah dibuat dan dikirim melalui WhatsApp queue.');
     }
 
     public function activate(User $user): RedirectResponse
@@ -131,7 +133,7 @@ class PanitiaController
 
         $user->update([
             'name' => $validated['name'],
-            'phone' => $validated['phone'] ?? null,
+            'phone' => $validated['phone'] ? WhatsappNumber::normalize($validated['phone']) : null,
             'status' => $validated['status'],
         ]);
 

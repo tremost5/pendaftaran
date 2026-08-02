@@ -67,14 +67,19 @@ class WhatsAppService
         }
 
         $message = implode("\n", array_filter([
-            'Halo '.$panitia->name.',',
+            'Shalom '.$panitia->name.',',
             '',
-            'Akun pengurus Anda telah dibuat.',
-            'Username: '.$panitia->username,
-            'Password sementara: '.$temporaryPassword,
-            'Login: '.$loginUrl,
+            'Akun Pengurus Anda telah dibuat.',
             '',
-            'Harap segera ganti password setelah login pertama.',
+            'Username:',
+            $panitia->username,
+            'Password:',
+            $temporaryPassword,
+            '',
+            'Silakan login melalui:',
+            $loginUrl,
+            '',
+            'Demi keamanan, segera ubah password setelah login pertama.',
             '',
             'Tuhan Yesus Memberkati.',
         ]));

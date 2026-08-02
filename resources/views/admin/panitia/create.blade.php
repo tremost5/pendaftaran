@@ -29,12 +29,12 @@
                     </div>
 
                     <div>
-                        <label for="password" class="block text-sm font-semibold text-slate-900">Password (opsional)</label>
-                        <div class="mt-2 flex gap-2">
-                            <input type="text" id="password" name="password" value="{{ old('password') }}" class="flex-1 block rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Biarkan kosong untuk generate saat aktivasi">
-                            <button type="button" onclick="document.getElementById('password').value = Math.random().toString(36).slice(-10)" class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 hover:bg-slate-50">Generate Password</button>
-                        </div>
-                        @error('password')
+                        <label for="status" class="block text-sm font-semibold text-slate-900">Status</label>
+                        <select id="status" name="status" required class="mt-2 block w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20">
+                            <option value="aktif" {{ old('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="nonaktif" {{ old('status') === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                        </select>
+                        @error('status')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -61,7 +61,7 @@
                     Pengurus yang dibuat di sini akan mendapatkan akses ke menu check-in peserta. Mereka dapat melakukan check-in melalui QR code atau manual.
                 </p>
                 <p class="mt-4 text-sm leading-6 text-slate-600">
-                    Pastikan password yang diberikan sudah diberitahukan kepada pengurus yang bersangkutan.
+                    Password akan dibuat otomatis oleh sistem dan dikirim melalui WhatsApp queue. Admin tidak perlu memasukkan password manual.
                 </p>
             </x-ui.card>
         </div>
