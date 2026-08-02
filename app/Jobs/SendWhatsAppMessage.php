@@ -21,7 +21,6 @@ class SendWhatsAppMessage implements ShouldQueue
         public string $message,
         public ?int $registrationId = null,
     ) {
-        $this->onQueue(config('queue.default'));
     }
 
     public function handle(WhatsAppService $whatsAppService): void
