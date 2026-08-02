@@ -154,7 +154,7 @@ class PanitiaController
             'role' => auth()->user()?->role,
             'action' => 'delete_pengurus',
             'target_type' => 'user',
-            'target_id' => $user->id,
+            'target_id' => $panitia->id,
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
         ]);
