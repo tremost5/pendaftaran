@@ -76,9 +76,9 @@ class PanitiaController
         return redirect()->route('admin.panitia.index')->with('success', 'Pengurus berhasil ditambahkan. Kredensial otomatis telah dibuat dan dikirim melalui WhatsApp queue.');
     }
 
-    public function activate(User $user): RedirectResponse
+    public function activate(User $panitia): RedirectResponse
     {
-        if ($user->role !== 'panitia') {
+        if ($panitia->role !== 'panitia') {
             abort(404);
         }
 
@@ -110,18 +110,18 @@ class PanitiaController
         return redirect()->route('admin.panitia.index')->with('success', 'Pengurus berhasil diaktifkan dan kredensial dikirim.');
     }
 
-    public function edit(User $user): View
+    public function edit(User $panitia): View
     {
-        if ($user->role !== 'panitia') {
+        if ($panitia->role !== 'panitia') {
             abort(404);
         }
 
-        return view('admin.panitia.edit', ['panitia' => $user]);
+        return view('admin.panitia.edit', ['panitia' => $panitia]);
     }
 
-    public function update(Request $request, User $user): RedirectResponse
+    public function update(Request $request, User $panitia): RedirectResponse
     {
-        if ($user->role !== 'panitia') {
+        if ($panitia->role !== 'panitia') {
             abort(404);
         }
 
@@ -140,13 +140,13 @@ class PanitiaController
         return redirect()->route('admin.panitia.index')->with('success', 'Pengurus berhasil diperbarui.');
     }
 
-    public function destroy(User $user): RedirectResponse
+    public function destroy(User $panitia): RedirectResponse
     {
-        if ($user->role !== 'panitia') {
+        if ($panitia->role !== 'panitia') {
             abort(404);
         }
 
-        $user->delete();
+        $panitia->delete();
 
         // record activity
         \App\Models\ActivityLog::create([

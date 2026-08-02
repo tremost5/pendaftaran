@@ -49,7 +49,10 @@ Route::middleware('auth')->group(function () {
                 'edit' => 'admin.panitia.edit',
                 'update' => 'admin.panitia.update',
                 'destroy' => 'admin.panitia.destroy',
-            ]
+            ],
+            'parameters' => [
+                'panitia' => 'panitia',
+            ],
         ]);
         
         // Export
