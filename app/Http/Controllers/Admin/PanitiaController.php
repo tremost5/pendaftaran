@@ -84,25 +84,25 @@ class PanitiaController
 
         // generate new password on activation and send via WhatsApp
         $temporaryPassword = $this->generateTemporaryPassword();
-        $user->password = Hash::make($temporaryPassword);
-        $user->status = 'aktif';
-        $user->force_password_change = true;
-        $user->password_sent_at = now();
-        $user->save();
+        $panitia->password = Hash::make($temporaryPassword);
+        $panitia->status = 'aktif';
+        $panitia->force_password_change = true;
+        $panitia->password_sent_at = now();
+        $panitia->save();
 
         $loginUrl = route('login', absolute: true);
         // normalize phone before sending
-        $user->phone = WhatsappNumber::normalize($user->phone);
-        $user->save();
+        $panitia->phone = WhatsappNumber::normalize($panitia->phone);
+        $panitia->save();
 
-        $this->sendCredentials($user, $temporaryPassword, activated: true);
+        $this->sendCredentials($panitia, $temporaryPassword, activated: true);
 
         \App\Models\ActivityLog::create([
             'user_id' => auth()->id(),
             'role' => auth()->user()?->role,
             'action' => 'activate_pengurus',
             'target_type' => 'user',
-            'target_id' => $user->id,
+            'target_id' => $panitia->id,
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
         ]);
@@ -131,7 +131,7 @@ class PanitiaController
             'status' => 'required|in:aktif,nonaktif',
         ]);
 
-        $user->update([
+        $panitia->update([
             'name' => $validated['name'],
             'phone' => $validated['phone'] ? WhatsappNumber::normalize($validated['phone']) : null,
             'status' => $validated['status'],
